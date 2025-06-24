@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { GameState } from '../lib/game/GameState';
+import { submitScore } from '../lib/queryClient';
 
 interface SubmitScoreProps {
   gameState: GameState;
@@ -27,30 +28,19 @@ export default function SubmitScore({ gameState, onSubmitSuccess, onSkip }: Subm
     setError('');
 
     try {
-      const response = await fetch('/api/leaderboard', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username.trim(),
-          walletAddress: walletAddress.trim() || null,
-          score: gameState.score,
-          level: gameState.level,
-          enemiesKilled: gameState.enemiesKilled,
-          gameTime: gameState.gameTime,
-        }),
+      await submitScore({
+        username: username.trim(),
+        wallet_address: walletAddress.trim() || undefined,
+        score: gameState.score,
+        level: gameState.level,
+        enemies_killed: gameState.enemiesKilled,
+        game_time: gameState.gameTime,
       });
-
-      if (response.ok) {
-        onSubmitSuccess();
-      } else {
-        const data = await response.json();
-        setError(data.error || 'Failed to submit score');
-      }
+      
+      onSubmitSuccess();
     } catch (error) {
       console.error('Submit error:', error);
-      setError('Network error. Please try again.');
+      setError('Failed to submit score. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

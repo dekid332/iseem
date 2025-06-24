@@ -1,4 +1,11 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { 
+  isSupabaseAvailable, 
+  getSupabaseLeaderboard, 
+  submitSupabaseScore,
+  type LeaderboardEntry,
+  type InsertLeaderboardEntry 
+} from "./supabase";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -21,6 +28,29 @@ export async function apiRequest(
 
   await throwIfResNotOk(res);
   return res;
+}
+
+// Enhanced API functions that can use either Supabase or local API
+export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+  if (isSupabaseAvailable()) {
+    console.log('Using Supabase for leaderboard');
+    return await getSupabaseLeaderboard();
+  } else {
+    console.log('Using local API for leaderboard');
+    const response = await apiRequest('GET', '/api/leaderboard');
+    return await response.json();
+  }
+}
+
+export async function submitScore(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry> {
+  if (isSupabaseAvailable()) {
+    console.log('Using Supabase for score submission');
+    return await submitSupabaseScore(entry);
+  } else {
+    console.log('Using local API for score submission');
+    const response = await apiRequest('POST', '/api/leaderboard', entry);
+    return await response.json();
+  }
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";

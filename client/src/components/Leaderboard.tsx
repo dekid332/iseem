@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { LeaderboardEntry } from '../lib/game/GameState';
+import { getLeaderboard } from '../lib/queryClient';
 
 interface LeaderboardProps {
   onBack: () => void;
@@ -16,8 +17,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await fetch('/api/leaderboard');
-      const data = await response.json();
+      const data = await getLeaderboard();
       setLeaderboardData(data);
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
@@ -97,10 +97,10 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
                       <td className="py-4 px-2 font-bold">{entry.username}</td>
                       <td className="py-4 px-2 text-green-400 font-bold">{entry.score.toLocaleString()}</td>
                       <td className="py-4 px-2">{entry.level}</td>
-                      <td className="py-4 px-2">{entry.enemiesKilled}</td>
-                      <td className="py-4 px-2">{formatTime(entry.gameTime)}</td>
+                      <td className="py-4 px-2">{entry.enemies_killed || entry.enemiesKilled}</td>
+                      <td className="py-4 px-2">{formatTime(entry.game_time || entry.gameTime)}</td>
                       <td className="py-4 px-2 text-blue-400 font-mono">
-                        {formatWallet(entry.walletAddress || '')}
+                        {formatWallet(entry.wallet_address || entry.walletAddress || '')}
                       </td>
                     </tr>
                   ))}

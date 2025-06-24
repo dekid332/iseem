@@ -80,9 +80,11 @@ The Prooper Shooter is a 2D top-down shooter game built with React and TypeScrip
 - Zustand for lightweight, reactive state management
 - React Query for potential server state management
 
-### Database (Configured but not active)
+### Database
 - Drizzle ORM for type-safe database operations
-- PostgreSQL support via Neon Database
+- PostgreSQL support via Neon Database (local development)
+- Supabase integration for public deployment
+- Automatic database switching based on environment variables
 - Database migrations system set up
 
 ### Development Tools
@@ -121,6 +123,8 @@ The Prooper Shooter is a 2D top-down shooter game built with React and TypeScrip
 - ✓ Created API endpoints for leaderboard data management
 - ✓ Fixed React state management for proper UI navigation between game phases
 - ✓ Game fully functional: menu → ready → playing → game over → score submission → leaderboard
+- ✓ Added Supabase integration for public deployment on Netlify
+- ✓ Automatic database switching: local PostgreSQL for development, Supabase for production
 
 ## Changelog
 - June 24, 2025. Initial setup
