@@ -42,24 +42,28 @@ const Game2D: React.FC = () => {
   }, []);
 
   const startGame = () => {
+    console.log('Start game button clicked');
     if (gameEngineRef.current) {
       gameEngineRef.current.start();
     }
   };
 
   const restartGame = () => {
+    console.log('Restart game button clicked');
     if (gameEngineRef.current) {
       gameEngineRef.current.restart();
     }
   };
 
   const goToMenu = () => {
+    console.log('Go to menu button clicked');
     if (gameEngineRef.current) {
       gameEngineRef.current.goToMenu();
     }
   };
 
   const showLeaderboard = () => {
+    console.log('Show leaderboard button clicked');
     if (gameEngineRef.current) {
       gameEngineRef.current.showLeaderboard();
     }

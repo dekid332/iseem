@@ -297,18 +297,21 @@ export class GameEngine {
   }
 
   goToMenu(): void {
+    console.log('Going to menu...');
     this.stop();
     this.gameState.phase = 'menu';
     this.updateGameState(this.gameState);
   }
 
   showLeaderboard(): void {
+    console.log('Showing leaderboard...');
     this.stop();
     this.gameState.phase = 'leaderboard';
     this.updateGameState(this.gameState);
   }
 
   showSubmitScore(): void {
+    console.log('Showing submit score...');
     this.stop();
     this.gameState.phase = 'submit-score';
     this.updateGameState(this.gameState);
