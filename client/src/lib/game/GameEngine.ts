@@ -256,7 +256,7 @@ export class GameEngine {
 
   start(): void {
     console.log('Starting game...');
-    this.gameState.phase = 'playing';
+    this.gameState.phase = 'ready';
     this.lastTime = performance.now();
     this.gameStartTime = performance.now();
     this.lastEnemySpawn = Date.now();
@@ -264,8 +264,8 @@ export class GameEngine {
     // Enable sound (user interaction required)
     this.soundManager.setMuted(false);
     
+    console.log('Game state after start:', this.gameState);
     this.updateGameState(this.gameState);
-    this.gameLoop = requestAnimationFrame(this.gameUpdate);
   }
 
   restart(): void {
@@ -300,6 +300,7 @@ export class GameEngine {
     console.log('Going to menu...');
     this.stop();
     this.gameState.phase = 'menu';
+    console.log('Game state after goToMenu:', this.gameState);
     this.updateGameState(this.gameState);
   }
 
@@ -307,6 +308,7 @@ export class GameEngine {
     console.log('Showing leaderboard...');
     this.stop();
     this.gameState.phase = 'leaderboard';
+    console.log('Game state after showLeaderboard:', this.gameState);
     this.updateGameState(this.gameState);
   }
 

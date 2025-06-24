@@ -17,6 +17,11 @@ const Game2D: React.FC = () => {
     gameTime: 0
   });
 
+  // Add logging when game state changes
+  useEffect(() => {
+    console.log('Game state changed:', gameState);
+  }, [gameState]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -42,9 +47,11 @@ const Game2D: React.FC = () => {
   }, []);
 
   const startGame = () => {
-    console.log('Start game button clicked');
+    console.log('Start game button clicked, current phase:', gameState.phase);
     if (gameEngineRef.current) {
       gameEngineRef.current.start();
+    } else {
+      console.error('Game engine not initialized');
     }
   };
 
@@ -63,9 +70,11 @@ const Game2D: React.FC = () => {
   };
 
   const showLeaderboard = () => {
-    console.log('Show leaderboard button clicked');
+    console.log('Show leaderboard button clicked, current phase:', gameState.phase);
     if (gameEngineRef.current) {
       gameEngineRef.current.showLeaderboard();
+    } else {
+      console.error('Game engine not initialized');
     }
   };
 
