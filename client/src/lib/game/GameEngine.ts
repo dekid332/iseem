@@ -265,7 +265,7 @@ export class GameEngine {
     this.soundManager.setMuted(false);
     
     console.log('Game state after start:', this.gameState);
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   restart(): void {
@@ -293,7 +293,7 @@ export class GameEngine {
     // Update player position for new canvas size
     this.player = new Player(this.canvas.width, this.canvas.height);
     
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   goToMenu(): void {
@@ -301,7 +301,7 @@ export class GameEngine {
     this.stop();
     this.gameState.phase = 'menu';
     console.log('Game state after goToMenu:', this.gameState);
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   showLeaderboard(): void {
@@ -309,21 +309,21 @@ export class GameEngine {
     this.stop();
     this.gameState.phase = 'leaderboard';
     console.log('Game state after showLeaderboard:', this.gameState);
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   showSubmitScore(): void {
     console.log('Showing submit score...');
     this.stop();
     this.gameState.phase = 'submit-score';
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   private endGame(): void {
     console.log('Game over!');
     this.gameState.phase = 'submit-score';
     this.stop();
-    this.updateGameState(this.gameState);
+    this.updateGameState({ ...this.gameState });
   }
 
   private stop(): void {
