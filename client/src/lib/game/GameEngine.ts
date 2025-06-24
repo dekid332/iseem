@@ -223,7 +223,7 @@ export class GameEngine {
     this.ctx.setLineDash([]);
   }
 
-  private gameUpdate = (currentTime: number): void => {
+  gameUpdate = (currentTime: number): void => {
     if (this.gameState.phase !== 'playing') return;
     
     const deltaTime = currentTime - this.lastTime;
