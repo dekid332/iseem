@@ -9,8 +9,8 @@ export class Player {
   gunLength: number;
 
   constructor(canvasWidth: number, canvasHeight: number) {
-    this.width = 60;
-    this.height = 80;
+    this.width = 80;
+    this.height = 100;
     // Position player at bottom center
     this.x = canvasWidth / 2 - this.width / 2;
     this.y = canvasHeight - this.height - 20;
@@ -33,22 +33,28 @@ export class Player {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    // Draw character body
-    ctx.fillStyle = '#4a90e2';
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    // Load and draw Iseem character image
+    const iseemImg = new Image();
+    iseemImg.src = '/assets/characters/iseem.png';
     
-    // Draw character head
-    ctx.fillStyle = '#ffdbac';
-    ctx.beginPath();
-    ctx.arc(this.x + this.width / 2, this.y + 15, 12, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Draw eyes
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.arc(this.x + this.width / 2 - 4, this.y + 12, 2, 0, Math.PI * 2);
-    ctx.arc(this.x + this.width / 2 + 4, this.y + 12, 2, 0, Math.PI * 2);
-    ctx.fill();
+    // If image is loaded, draw it
+    if (iseemImg.complete) {
+      // Scale Iseem to be bigger since he's the main character
+      const imgSize = Math.min(this.width, this.height) * 1.2;
+      const imgX = this.x + (this.width - imgSize) / 2;
+      const imgY = this.y + (this.height - imgSize) / 2;
+      
+      ctx.drawImage(iseemImg, imgX, imgY, imgSize, imgSize);
+    } else {
+      // Fallback drawing while image loads
+      ctx.fillStyle = '#4a90e2';
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 10px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('ISEEM', this.x + this.width / 2, this.y + this.height / 2);
+    }
     
     // Draw "The Prooper" gun
     ctx.strokeStyle = '#8B4513';

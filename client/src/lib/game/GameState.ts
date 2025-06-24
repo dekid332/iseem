@@ -1,4 +1,4 @@
-export type GamePhase = 'ready' | 'playing' | 'ended';
+export type GamePhase = 'menu' | 'ready' | 'playing' | 'ended' | 'leaderboard' | 'submit-score';
 
 export interface GameState {
   phase: GamePhase;
@@ -6,6 +6,18 @@ export interface GameState {
   health: number;
   level: number;
   enemiesKilled: number;
+  gameTime: number;
+}
+
+export interface LeaderboardEntry {
+  id: number;
+  username: string;
+  walletAddress?: string;
+  score: number;
+  level: number;
+  enemiesKilled: number;
+  gameTime: number;
+  createdAt: string;
 }
 
 export interface Vector2D {

@@ -109,8 +109,19 @@ The Prooper Shooter is a 2D top-down shooter game built with React and TypeScrip
 3. Asset optimization and bundling
 4. Production server startup
 
+## Recent Changes
+- ✓ Resized Iseem character to be the main shooter (larger size: 80x100)
+- ✓ Updated enemy system to use provided character images (Colt, SOLjakey, Whish, Pete)
+- ✓ Added main menu with gradient background and character showcase
+- ✓ Implemented leaderboard system with PostgreSQL database
+- ✓ Created score submission form with username and Solana wallet address inputs
+- ✓ Added game time tracking and enhanced UI with creative styling
+- ✓ Set up database schema for leaderboard functionality
+- ✓ Created API endpoints for leaderboard data management
+
 ## Changelog
 - June 24, 2025. Initial setup
+- June 24, 2025. Major UI overhaul with character integration and leaderboard system
 
 ## User Preferences
 

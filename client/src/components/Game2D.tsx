@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '../lib/game/GameEngine';
 import { GameState, GamePhase } from '../lib/game/GameState';
+import MainMenu from './MainMenu';
+import Leaderboard from './Leaderboard';
+import SubmitScore from './SubmitScore';
 
 const Game2D: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameEngineRef = useRef<GameEngine | null>(null);
   const [gameState, setGameState] = useState<GameState>({
-    phase: 'ready',
+    phase: 'menu',
     score: 0,
     health: 100,
     level: 1,
-    enemiesKilled: 0
+    enemiesKilled: 0,
+    gameTime: 0
   });
 
   useEffect(() => {
@@ -49,6 +53,41 @@ const Game2D: React.FC = () => {
     }
   };
 
+  const goToMenu = () => {
+    if (gameEngineRef.current) {
+      gameEngineRef.current.goToMenu();
+    }
+  };
+
+  const showLeaderboard = () => {
+    if (gameEngineRef.current) {
+      gameEngineRef.current.showLeaderboard();
+    }
+  };
+
+  const handleSubmitSuccess = () => {
+    showLeaderboard();
+  };
+
+  // Render different phases
+  if (gameState.phase === 'menu') {
+    return <MainMenu onStartGame={startGame} onShowLeaderboard={showLeaderboard} />;
+  }
+
+  if (gameState.phase === 'leaderboard') {
+    return <Leaderboard onBack={goToMenu} />;
+  }
+
+  if (gameState.phase === 'submit-score') {
+    return (
+      <SubmitScore 
+        gameState={gameState} 
+        onSubmitSuccess={handleSubmitSuccess}
+        onSkip={goToMenu}
+      />
+    );
+  }
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <canvas ref={canvasRef} />
@@ -71,6 +110,7 @@ const Game2D: React.FC = () => {
             <p>Iseem needs your help to stop the escaping enemies!</p>
             <p>Use your mouse to aim and click or press spacebar to shoot 💩</p>
             <button onClick={startGame}>Start Game</button>
+            <button onClick={goToMenu} style={{ marginLeft: '10px' }}>Back to Menu</button>
           </div>
         )}
 
@@ -81,6 +121,7 @@ const Game2D: React.FC = () => {
             <p>Enemies Defeated: {gameState.enemiesKilled}</p>
             <p>Level Reached: {gameState.level}</p>
             <button onClick={restartGame}>Play Again</button>
+            <button onClick={goToMenu} style={{ marginLeft: '10px' }}>Main Menu</button>
           </div>
         )}
 

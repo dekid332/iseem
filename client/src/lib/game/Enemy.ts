@@ -13,6 +13,8 @@ export class Enemy implements GameObject {
   health: number;
   maxHealth: number;
 
+  character: string;
+
   constructor(canvasWidth: number, canvasHeight: number, level: number) {
     this.width = 40;
     this.height = 40;
@@ -32,28 +34,24 @@ export class Enemy implements GameObject {
       this.direction.y = (Math.random() - 0.5) * 0.5;
     }
     
-    // Different enemy types
-    const types: Array<'runner' | 'jumper' | 'tank'> = ['runner', 'jumper', 'tank'];
-    this.type = types[Math.floor(Math.random() * types.length)];
+    // Different enemy types with character assignments
+    const enemyTypes = [
+      { type: 'runner', character: 'colt', color: '#ff6b6b', speedMult: 1.5, health: 1 },
+      { type: 'jumper', character: 'soljakey', color: '#4ecdc4', speedMult: 0.8, health: 1 },
+      { type: 'tank', character: 'whish', color: '#45b7d1', speedMult: 0.6, health: 3 },
+      { type: 'runner', character: 'pete', color: '#ff9f43', speedMult: 1.2, health: 2 }
+    ];
     
-    switch (this.type) {
-      case 'runner':
-        this.color = '#ff6b6b';
-        this.speed *= 1.5;
-        this.health = 1;
-        break;
-      case 'jumper':
-        this.color = '#4ecdc4';
-        this.speed *= 0.8;
-        this.health = 1;
-        break;
-      case 'tank':
-        this.color = '#45b7d1';
-        this.speed *= 0.6;
-        this.health = 3;
-        this.width = 60;
-        this.height = 60;
-        break;
+    const enemyConfig = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+    this.type = enemyConfig.type as 'runner' | 'jumper' | 'tank';
+    this.character = enemyConfig.character;
+    this.color = enemyConfig.color;
+    this.speed *= enemyConfig.speedMult;
+    this.health = enemyConfig.health;
+    
+    if (this.type === 'tank') {
+      this.width = 60;
+      this.height = 60;
     }
     
     this.maxHealth = this.health;
@@ -89,12 +87,29 @@ export class Enemy implements GameObject {
   draw(ctx: CanvasRenderingContext2D): void {
     if (!this.active) return;
     
-    // Draw enemy body
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    // Load and draw character image
+    const characterImg = new Image();
+    characterImg.src = `/assets/characters/${this.character}.png`;
     
-    // Draw health bar for tanks
-    if (this.type === 'tank' && this.health < this.maxHealth) {
+    if (characterImg.complete) {
+      const imgSize = Math.min(this.width, this.height);
+      const imgX = this.x + (this.width - imgSize) / 2;
+      const imgY = this.y + (this.height - imgSize) / 2;
+      
+      ctx.drawImage(characterImg, imgX, imgY, imgSize, imgSize);
+    } else {
+      // Fallback drawing while image loads
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 8px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(this.character.toUpperCase(), this.x + this.width / 2, this.y + this.height / 2);
+    }
+    
+    // Draw health bar for damaged enemies
+    if (this.health < this.maxHealth) {
       const barWidth = this.width;
       const barHeight = 4;
       
@@ -107,20 +122,6 @@ export class Enemy implements GameObject {
       const healthPercent = this.health / this.maxHealth;
       ctx.fillRect(this.x, this.y - 8, barWidth * healthPercent, barHeight);
     }
-    
-    // Draw eyes
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(this.x + this.width * 0.3, this.y + this.height * 0.3, 4, 0, Math.PI * 2);
-    ctx.arc(this.x + this.width * 0.7, this.y + this.height * 0.3, 4, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Draw pupils
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.arc(this.x + this.width * 0.3, this.y + this.height * 0.3, 2, 0, Math.PI * 2);
-    ctx.arc(this.x + this.width * 0.7, this.y + this.height * 0.3, 2, 0, Math.PI * 2);
-    ctx.fill();
     
     // Draw type indicator
     ctx.fillStyle = '#fff';

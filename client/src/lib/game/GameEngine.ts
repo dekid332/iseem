@@ -18,12 +18,15 @@ export class GameEngine {
   private inputManager: InputManager;
   
   private gameState: GameState = {
-    phase: 'ready',
+    phase: 'menu',
     score: 0,
     health: 100,
     level: 1,
-    enemiesKilled: 0
+    enemiesKilled: 0,
+    gameTime: 0
   };
+  
+  private gameStartTime: number = 0;
   
   private updateGameState: (state: GameState) => void;
   private gameLoop: number | null = null;
@@ -226,6 +229,9 @@ export class GameEngine {
     const deltaTime = currentTime - this.lastTime;
     this.lastTime = currentTime;
     
+    // Update game time
+    this.gameState.gameTime = Math.floor((currentTime - this.gameStartTime) / 1000);
+    
     // Spawn enemies
     this.spawnEnemy();
     
@@ -252,6 +258,7 @@ export class GameEngine {
     console.log('Starting game...');
     this.gameState.phase = 'playing';
     this.lastTime = performance.now();
+    this.gameStartTime = performance.now();
     this.lastEnemySpawn = Date.now();
     
     // Enable sound (user interaction required)
@@ -271,7 +278,8 @@ export class GameEngine {
       score: 0,
       health: 100,
       level: 1,
-      enemiesKilled: 0
+      enemiesKilled: 0,
+      gameTime: 0
     };
     
     // Clear game objects
@@ -288,9 +296,27 @@ export class GameEngine {
     this.updateGameState(this.gameState);
   }
 
+  goToMenu(): void {
+    this.stop();
+    this.gameState.phase = 'menu';
+    this.updateGameState(this.gameState);
+  }
+
+  showLeaderboard(): void {
+    this.stop();
+    this.gameState.phase = 'leaderboard';
+    this.updateGameState(this.gameState);
+  }
+
+  showSubmitScore(): void {
+    this.stop();
+    this.gameState.phase = 'submit-score';
+    this.updateGameState(this.gameState);
+  }
+
   private endGame(): void {
     console.log('Game over!');
-    this.gameState.phase = 'ended';
+    this.gameState.phase = 'submit-score';
     this.stop();
     this.updateGameState(this.gameState);
   }
